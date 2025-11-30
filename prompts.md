@@ -1,0 +1,30 @@
+# Kubernetes YAML Generation Prompts
+
+This file contains prompts to generate specific Kubernetes YAML files based on the examples from [go-demo-app](https://github.com/den-vasyliev/go-demo-app/tree/master/yaml).
+
+## app.yaml
+Create a Kubernetes Pod YAML named 'app' with labels 'app: demo' and 'run: demo'. It should run a container named 'app' using image 'gcr.io/k8s-k3s/demo:v1.0.0' exposing port 8000 as 'http'. Save it to `DEVOPS101/yaml/app.yaml`.
+
+## app-livenessProbe.yaml
+Create a Pod YAML named 'app-livenessprob' in namespace 'demo'. The container 'app' uses image 'gcr.io/k8s-k3s/demo:v1.0.0'. Add a livenessProbe using httpGet on path '/' and port 8000, with initialDelaySeconds 5, timeoutSeconds 1, periodSeconds 10, failureThreshold 3. Expose container port 8080 named 'http'. Save to `DEVOPS101/yaml/app-livenessProbe.yaml`.
+
+## app-readinessProbe.yaml
+Create a Pod YAML named 'app-readinessprob'. The container 'app' uses image 'gcr.io/k8s-k3s/demo:v2.0.0'. Add a livenessProbe (httpGet path '/', port 8000, initialDelay 5, timeout 1, period 10, failureThreshold 3) and a readinessProbe (httpGet path '/ready', port 8000, period 2, initialDelay 0, failureThreshold 3, successThreshold 1). Expose port 8000 named 'http'. Save to `DEVOPS101/yaml/app-readinessProbe.yaml`.
+
+## app-volumeMounts.yaml
+Create a Pod YAML named 'app-volume'. The container 'app' uses image 'gcr.io/kuar-demo/kuard-amd64:1'. Add livenessProbe (path '/healthy', port 8080, initialDelay 5, timeout 1, period 10, failureThreshold 3) and readinessProbe (path '/ready', port 8080, period 2, initialDelay 0, failureThreshold 3, successThreshold 1). Expose port 8080 named 'http'. Mount a volume named 'data' at '/data'. The volume should use hostPath '/var/lib/app'. Save to `DEVOPS101/yaml/app-volumeMounts.yaml`.
+
+## app-cronjob.yaml
+Create a CronJob YAML (apiVersion batch/v1beta1) named 'app-cronjob' with schedule "*/5 * * * *". The job template should run a container named 'hello' using image 'bash' with command `["echo", "Hello world"]`. Set restartPolicy to OnFailure. Save to `DEVOPS101/yaml/app-cronjob.yaml`.
+
+## app-job.yaml
+Create a Job YAML named 'app-job-rsync'. Define a volume 'data-input' using gcePersistentDisk with pdName 'glow-data-disk-200' and fsType 'ext4'. The container 'init' uses image 'google/cloud-sdk:275.0.0-alpine' and runs command `["/bin/sh", "-c", "gsutil -m rsync -dr gs://glow-sportradar/ /data/input"]`. Mount 'data-input' at '/data/input'. Set restartPolicy to Never and backoffLimit to 0. Save to `DEVOPS101/yaml/app-job.yaml`.
+
+## app-multicontainer.yaml
+Create a Pod YAML named 'app-multi-containers'. Define an emptyDir volume named 'html'. Container '1st' uses image 'nginx' and mounts 'html' at '/usr/share/nginx/html'. Container '2nd' uses image 'debian', mounts 'html' at '/html', and runs command `["/bin/sh", "-c"]` with args `["while true; do date >> /html/index.html; sleep 1; done"]`. Save to `DEVOPS101/yaml/app-multicontainer.yaml`.
+
+## app-resources.yaml
+Create a Pod YAML named 'app-resource'. Container 'app' uses image 'gcr.io/kuar-demo/kuard-amd64:1'. Add livenessProbe (path '/healthy', port 8080, initialDelay 5, timeout 1, period 10, failureThreshold 3) and readinessProbe (path '/ready', port 8080, period 2, initialDelay 0, failureThreshold 3, successThreshold 1). Expose port 8080 named 'http'. Set resource requests to cpu '100m', memory '128Mi' and limits to cpu '100m', memory '256Mi'. Save to `DEVOPS101/yaml/app-resources.yaml`.
+
+## app-secret-env.yaml
+Create a Pod YAML named 'app-secret-env'. Container 'mycontainer' uses image 'redis'. Define environment variables: 'SECRET_USERNAME' from secret 'mysecret1' key 'username', and 'SECRET_PASSWORD' from secret 'mysecret1' key 'password'. Set restartPolicy to Never. Save to `DEVOPS101/yaml/app-secret-env.yaml`.
